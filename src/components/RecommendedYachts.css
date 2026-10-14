@@ -1,0 +1,380 @@
+
+/* ==============================
+   RECOMMENDED YACHTS
+============================== */
+
+.recommended-yachts-section {
+  width: 92%;
+  max-width: 1800px;
+  margin: 28px auto 40px;
+}
+
+/* HORIZONTAL CAROUSEL */
+
+.recommended-yachts-track {
+  display: flex;
+  gap: 22px;
+  width: 100%;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+
+  scrollbar-width: none;
+
+  cursor: grab;
+  outline: none;
+}
+
+.recommended-yachts-track::-webkit-scrollbar {
+  display: none;
+}
+
+.recommended-yachts-track:active {
+  cursor: grabbing;
+}
+
+.recommended-yachts-track:focus-visible {
+  outline: 2px solid #ff7900;
+  outline-offset: 3px;
+}
+
+/* CARD */
+
+.rec-yacht-card {
+  flex: 0 0 clamp(270px, 19.7vw, 366px);
+  min-width: 0;
+
+  background: #ffffff;
+  scroll-snap-align: start;
+}
+
+/* IMAGE */
+
+.rec-yacht-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 366 / 273;
+
+  overflow: hidden;
+  border-radius: 9px;
+}
+
+.rec-yacht-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  user-select: none;
+}
+
+/* FAVORITE */
+
+.rec-favorite {
+  position: absolute;
+  top: 13px;
+  right: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 39px;
+  height: 39px;
+
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+
+  z-index: 2;
+  cursor: pointer;
+}
+
+.rec-favorite.is-favorite {
+  background: #ff7900;
+}
+
+.rec-favorite svg {
+  width: 21px;
+  height: 21px;
+  color: #ffffff;
+}
+
+/* TITLE + RATING */
+
+.rec-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.rec-card-heading h3 {
+  margin: 0;
+
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 400;
+
+  color: #383838;
+  white-space: nowrap;
+}
+
+.rec-card-rating {
+  display: flex;
+  align-items: center;
+
+  color: #ff7900;
+  font-size: 17px;
+  letter-spacing: -2px;
+
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.rec-empty-star {
+  color: #e5e5e5;
+}
+
+/* PRICE */
+
+.rec-card-price {
+  margin-top: 4px;
+  padding-bottom: 18px;
+
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #aaaaaa;
+
+  border-bottom: 1px solid #d8d8d8;
+}
+
+.rec-card-price strong {
+  color: #333333;
+  font-weight: 700;
+}
+
+/* LOCATION */
+
+.rec-card-location {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  min-height: 61px;
+  padding: 13px 0;
+
+  border-bottom: 1px solid #d8d8d8;
+
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333333;
+}
+
+/* ITALIAN FLAG */
+
+.rec-italy-flag {
+  display: flex;
+  width: 31px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.rec-italy-flag i {
+  width: 33.333%;
+  height: 100%;
+  display: block;
+}
+
+.rec-italy-flag i:nth-child(1) {
+  background: #55b000;
+}
+
+.rec-italy-flag i:nth-child(2) {
+  background: #ffffff;
+}
+
+.rec-italy-flag i:nth-child(3) {
+  background: #ff4c5a;
+}
+
+/* CARD FEATURES */
+
+.rec-card-features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  min-height: 58px;
+  align-items: center;
+
+  border-bottom: 1px solid #d8d8d8;
+}
+
+.rec-feature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  min-height: 34px;
+
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444444;
+}
+
+.rec-feature + .rec-feature {
+  border-left: 1px solid #dedede;
+}
+
+.rec-feature svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #929292;
+}
+
+/* ==============================
+   GET IN TOUCH BANNER
+============================== */
+
+.rec-contact-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 220px;
+  margin-top: 28px;
+  padding: 30px 20px;
+
+  background: #f8f8f8;
+  text-align: center;
+}
+
+.rec-contact-banner p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0 22px;
+
+  margin: 0;
+
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 38px;
+  line-height: 1.4;
+  font-weight: 400;
+
+  color: #3e3e3e;
+}
+
+.rec-contact-banner a {
+  color: #00b9f5;
+  text-decoration: none;
+}
+
+.rec-contact-banner a:hover {
+  text-decoration: underline;
+}
+
+/* ==============================
+   TABLET
+============================== */
+
+@media (max-width: 992px) {
+  .recommended-yachts-section {
+    width: 92%;
+  }
+
+  .rec-card-heading h3 {
+    font-size: 28px;
+  }
+
+  .rec-contact-banner {
+    min-height: 180px;
+  }
+
+  .rec-contact-banner p {
+    font-size: 29px;
+  }
+}
+
+/* ==============================
+   MOBILE
+============================== */
+
+@media (max-width: 768px) {
+  .recommended-yachts-section {
+    width: 90%;
+    margin-top: 25px;
+  }
+
+  .recommended-yachts-track {
+    gap: 15px;
+  }
+
+  .rec-yacht-card {
+    flex-basis: 275px;
+  }
+
+  .rec-card-heading h3 {
+    font-size: 26px;
+  }
+
+  .rec-contact-banner {
+    min-height: 150px;
+    margin-top: 22px;
+  }
+
+  .rec-contact-banner p {
+    gap: 0 10px;
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rec-yacht-card {
+    flex-basis: 245px;
+  }
+
+  .rec-card-heading h3 {
+    font-size: 24px;
+  }
+
+  .rec-card-rating {
+    font-size: 14px;
+  }
+
+  .rec-card-location,
+  .rec-feature {
+    font-size: 12px;
+  }
+
+  .rec-feature {
+    gap: 5px;
+  }
+
+  .rec-feature svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .rec-contact-banner {
+    min-height: 130px;
+    padding: 25px 15px;
+  }
+
+  .rec-contact-banner p {
+    font-size: 21px;
+  }
+}

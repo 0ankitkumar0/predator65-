@@ -1,24 +1,44 @@
-import logo from './logo.svg';
+
 import './App.css';
+
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import YachtGallery from './components/YachtGallery';
+import AboutCharter from './components/AboutCharter';
+import WhatsIncluded from './components/WhatsIncluded';
+import TargetSpecies from './components/TargetSpecies';
+import Yacht3DViewer from './components/Yacht3DViewer';
+import InteractiveMap from './components/InteractiveMap';
+import PickupCancellation from './components/PickupCancellation';
+import RecommendedYachts from './components/RecommendedYachts';
+import BookingPanel from './components/BookingPanel';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="hero-wrapper">
+        <div className="hero-overlay"></div>
+
+        <Navbar />
+        <Hero />
+      </div>
+
+      <div className="page-layout">
+        <main className="page-main">
+          <YachtGallery />
+          <AboutCharter />
+          <WhatsIncluded />
+          <TargetSpecies />
+          <Yacht3DViewer />
+          <InteractiveMap />
+          <PickupCancellation />
+        </main>
+
+        <BookingPanel />
+      </div>
+
+      <RecommendedYachts />
+    </>
   );
 }
 

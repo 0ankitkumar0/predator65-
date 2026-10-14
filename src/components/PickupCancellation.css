@@ -1,0 +1,202 @@
+
+/* =========================
+   PICKUP AND CANCELLATION
+========================= */
+
+.pickup-cancellation-section {
+  width: 100%;
+  margin: 0 0 45px;
+}
+
+/* =========================
+   FREE HOTEL PICKUP
+========================= */
+
+.hotel-pickup-box {
+  width: 100%;
+  min-height: 101px;
+
+  padding: 20px 21px;
+
+  background: #effcf4;
+  border: 1px solid #a7f3c2;
+  border-radius: 11px;
+
+  margin-bottom: 42px;
+}
+
+/* COMMON TITLE ROW */
+
+.notice-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 24px;
+  margin-bottom: 11px;
+}
+
+.notice-title svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+/* HOTEL PICKUP TITLE */
+
+.hotel-pickup-box .notice-title h3 {
+  margin: 0;
+
+  color: #006b35;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+/* HOTEL PICKUP DESCRIPTION */
+
+.hotel-pickup-box p {
+  margin: 0;
+
+  color: #008d43;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 23px;
+}
+
+/* =========================
+   CANCELLATION POLICY
+========================= */
+
+.cancellation-policy-section {
+  width: 100%;
+}
+
+.cancellation-policy-section h2 {
+  margin: 0 0 18px;
+
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 36px;
+
+  color: #171717;
+}
+
+/* =========================
+   FREE CANCELLATION BOX
+========================= */
+
+.free-cancellation-box {
+  width: 100%;
+  min-height: 103px;
+
+  padding: 20px 21px;
+
+  background: #edf5ff;
+  border: 1px solid #b1d0ff;
+  border-radius: 11px;
+}
+
+/* FREE CANCELLATION TITLE */
+
+.free-cancellation-box .notice-title h3 {
+  margin: 0;
+
+  color: #0747d9;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+/* FREE CANCELLATION DESCRIPTION */
+
+.free-cancellation-box p {
+  margin: 0;
+
+  color: #0751fa;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 23px;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 992px) {
+  .cancellation-policy-section h2 {
+    font-size: 26px;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .hotel-pickup-box,
+  .free-cancellation-box {
+    padding: 17px 16px;
+  }
+
+  .hotel-pickup-box {
+    margin-bottom: 32px;
+  }
+
+  .cancellation-policy-section h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .hotel-pickup-box .notice-title h3,
+  .free-cancellation-box .notice-title h3 {
+    font-size: 15px;
+  }
+
+  .hotel-pickup-box p,
+  .free-cancellation-box p {
+    font-size: 13px;
+    line-height: 21px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .hotel-pickup-box,
+  .free-cancellation-box {
+    padding: 15px 13px;
+    border-radius: 9px;
+  }
+
+  .notice-title {
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+
+  .notice-title svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .hotel-pickup-box .notice-title h3,
+  .free-cancellation-box .notice-title h3 {
+    font-size: 14px;
+  }
+
+  .cancellation-policy-section h2 {
+    font-size: 22px;
+  }
+
+  .hotel-pickup-box p,
+  .free-cancellation-box p {
+    font-size: 12px;
+  }
+}
