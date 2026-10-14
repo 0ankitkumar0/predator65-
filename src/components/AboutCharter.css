@@ -1,0 +1,50 @@
+/* Styles for AboutCharter component. */
+
+.about-charter {
+  width: 100%;
+  margin: 0 0 35px;
+  color: #344054;
+}
+
+.about-charter h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
+  font-weight: 400;
+  color: #202124;
+  margin-bottom: 20px;
+}
+
+.about-charter p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #475467;
+  margin-bottom: 13px;
+}
+
+@media (max-width: 992px) {
+  .about-charter h2 {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-charter h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+
+  .about-charter p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-charter h2 {
+    font-size: 22px;
+  }
+
+  .about-charter p {
+    font-size: 12px;
+  }
+}

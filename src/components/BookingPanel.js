@@ -1,64 +1,98 @@
 
 import React, { useState } from 'react';
+import './BookingPanel.css';
 
+// 1. DEMO DATA: ye sab local data hai, backend/API nahi.
 const MONTHS = [
-  'January', 'February', 'March', 'April',
-  'May', 'June', 'July', 'August',
-  'September', 'October', 'November', 'December'
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
-const WEEKDAYS = [
-  'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'
-];
+const DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+const TIMES = ['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM'];
 
 const MAY_PRICES = {
-  7: 1346,
-  8: 1500,
-  9: 1346,
-  12: 1346,
-  13: 1346,
-  14: 1346,
-  15: 1500,
-  16: 1346,
-  17: 1346,
-  18: 1346,
-  19: 1346,
-  20: 1346,
-  21: 1346,
-  29: 1346
+  7: 1346, 8: 1500, 9: 1346, 12: 1346, 13: 1346,
+  14: 1346, 15: 1500, 16: 1346, 17: 1346, 18: 1346,
+  19: 1346, 20: 1346, 21: 1346, 29: 1346
 };
 
 const PACKAGES = [
   {
     id: 'half',
     name: 'Half-Day Charter',
-    description: 'Basic equipment • Bait & tackle',
-    price: 230
+    price: 230,
+    description: 'Basic equipment • Bait & tackle'
   },
   {
     id: 'full',
     name: 'Full-Day Adventure',
-    description: 'Premium equipment • All bait & tackle',
     price: 280,
+    description: 'Premium equipment • All bait & tackle',
     popular: true
   },
   {
     id: 'extended',
     name: 'Extended Deep Sea',
-    description: 'Top-tier equipment • Premium bait',
-    price: 350
+    price: 350,
+    description: 'Top-tier equipment • Premium bait'
   }
 ];
 
-const TIME_SLOTS = [
-  '08:00 AM',
-  '09:00 AM',
-  '10:00 AM',
-  '11:00 AM'
-];
+// 2. HELPERS: date/price ko screen par dikhane ke liye.
+const pad = (n) => String(n).padStart(2, '0');
+const money = (n) => n.toLocaleString('en-US');
 
-// Icons
+function formatDate(value) {
+  const [year, month, day] = value.split('-').map(Number);
+  return `${pad(day)} ${MONTHS[month - 1].slice(0, 3).toUpperCase()} ${year}`;
+}
 
+// PDF ke May 2021 calendar ka original demo layout maintain kiya hai.
+function calendarDays(year, month) {
+  if (year === 2021 && month === 4) {
+    return [
+      { day: 28, current: false, key: 'previous-28' },
+      ...Array.from({ length: 30 }, (_, i) => ({
+        day: i + 1,
+        current: true,
+        key: `may-${i + 1}`
+      })),
+      ...Array.from({ length: 4 }, (_, i) => ({
+        day: i + 1,
+        current: false,
+        key: `next-${i + 1}`
+      }))
+    ];
+  }
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  const cells = Math.ceil((firstDay + lastDay) / 7) * 7;
+
+  return Array.from({ length: cells }, (_, i) => {
+    const date = new Date(year, month, i - firstDay + 1);
+
+    return {
+      day: date.getDate(),
+      current: date.getMonth() === month,
+      key: `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+    };
+  });
+}
+
+// Available date ka demo price.
+function dayPrice(year, month, day) {
+  if (year === 2021 && month === 4) {
+    return MAY_PRICES[day] || null;
+  }
+
+  return day >= 7 && day <= 21 && day % 6 !== 0
+    ? (day % 7 === 1 ? 1500 : 1346)
+    : null;
+}
+
+// 3. ICONS: existing design ke same SVG icons.
 function PencilIcon() {
   return (
     <svg
@@ -73,19 +107,17 @@ function PencilIcon() {
       style={{
         display: 'inline-block',
         verticalAlign: 'middle',
-        marginRight: '5px'
+        marginRight: 5
       }}
       aria-hidden="true"
     >
       <path d="M12 20h9" />
-      <path
-        d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"
-      />
+      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
     </svg>
   );
 }
 
-function CheckCircleIcon() {
+function CheckIcon() {
   return (
     <svg
       width="15"
@@ -99,7 +131,7 @@ function CheckCircleIcon() {
       style={{
         display: 'inline-block',
         verticalAlign: 'middle',
-        marginRight: '5px',
+        marginRight: 5,
         flexShrink: 0
       }}
       aria-hidden="true"
@@ -110,711 +142,524 @@ function CheckCircleIcon() {
   );
 }
 
-// Helper functions
+// 4. ACCORDION: heading click se section open/close hota hai.
+function Accordion({ title, open, onToggle, children }) {
+  return (
+    <section className="booking-section">
+      <button
+        type="button"
+        className="booking-heading"
+        onClick={onToggle}
+        aria-expanded={open}
+      >
+        <span>{title}</span>
+        <span className="section-toggle">{open ? '−' : '+'}</span>
+      </button>
 
-function pad(number) {
-  return String(number).padStart(2, '0');
-}
-
-function formatDate(date) {
-  const [year, month, day] = date.split('-').map(Number);
-
-  return `${pad(day)} ${MONTHS[month - 1]
-    .slice(0, 3)
-    .toUpperCase()} ${year}`;
-}
-
-function getCalendarDays(year, month) {
-  // Match the initial reference calendar layout.
-  if (year === 2021 && month === 4) {
-    return [
-      {
-        day: 28,
-        current: false,
-        key: 'previous-28'
-      },
-      ...Array.from({ length: 30 }, (_, index) => ({
-        day: index + 1,
-        current: true,
-        key: `may-${index + 1}`
-      })),
-      ...Array.from({ length: 4 }, (_, index) => ({
-        day: index + 1,
-        current: false,
-        key: `next-${index + 1}`
-      }))
-    ];
-  }
-
-  const firstDay = new Date(year, month, 1).getDay();
-
-  const daysInMonth = new Date(
-    year,
-    month + 1,
-    0
-  ).getDate();
-
-  const totalCells =
-    Math.ceil((firstDay + daysInMonth) / 7) * 7;
-
-  return Array.from(
-    { length: totalCells },
-    (_, index) => {
-      const date = new Date(
-        year,
-        month,
-        index - firstDay + 1
-      );
-
-      return {
-        day: date.getDate(),
-        current: date.getMonth() === month,
-        key: `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
-      };
-    }
+      {open && children}
+    </section>
   );
 }
 
-function getPrice(year, month, day) {
-  if (year === 2021 && month === 4) {
-    return MAY_PRICES[day] || null;
-  }
+// 5. CALENDAR: month change aur available date select hoti hai.
+function Calendar({
+  viewMonth,
+  selectedDate,
+  dateChanged,
+  onMonthChange,
+  onDateChange
+}) {
+  const year = viewMonth.getFullYear();
+  const month = viewMonth.getMonth();
 
-  // Mock availability for other months.
-  if (day >= 7 && day <= 21 && day % 6 !== 0) {
-    return day % 7 === 1 ? 1500 : 1346;
-  }
+  return (
+    <div className="calendar-content">
+      <div className="calendar-toolbar">
+        <strong>{MONTHS[month]} {year}</strong>
 
-  return null;
+        <div className="calendar-navigation">
+          <button type="button" onClick={() => onMonthChange(-1)}
+            aria-label="Previous month">◀</button>
+          <button type="button" onClick={() => onMonthChange(1)}
+            aria-label="Next month">▶</button>
+        </div>
+      </div>
+
+      <div className="calendar-weekdays">
+        {DAYS.map((day) => <span key={day}>{day}</span>)}
+      </div>
+
+      <div className="calendar-grid">
+        {calendarDays(year, month).map((cell) => {
+          const price = cell.current
+            ? dayPrice(year, month, cell.day)
+            : null;
+
+          const active = dateChanged &&
+            selectedDate === `${year}-${pad(month + 1)}-${pad(cell.day)}`;
+
+          const className = [
+            'calendar-day',
+            cell.current ? '' : 'outside',
+            price ? 'available' : 'unavailable',
+            active ? 'active' : ''
+          ].join(' ');
+
+          return (
+            <button
+              key={cell.key}
+              type="button"
+              className={className}
+              disabled={!price}
+              onClick={() => onDateChange(cell.day)}
+              aria-label={price
+                ? `${cell.day} ${MONTHS[month]}, €${price}`
+                : `${cell.day} unavailable`
+              }
+            >
+              <span className="calendar-day-number">
+                {pad(cell.day)}
+              </span>
+
+              {price && <small>€{money(price)}</small>}
+            </button>
+          );
+        })}
+      </div>
+
+      <p className="calendar-note">
+        Green dates are available. Prices vary by date.
+      </p>
+    </div>
+  );
 }
 
-// Main Component
+// Same field layout Date, Passengers aur Departure ke liye reuse hota hai.
+function Field({ title, help, children }) {
+  return (
+    <div className="booking-field-row">
+      <div>
+        <h4>{title}</h4>
+        <p>{help}</p>
+      </div>
+      {children}
+    </div>
+  );
+}
 
+// 6. TRIP DETAILS: date, passengers, departure time aur time slots.
+function TripDetails({
+  date,
+  onShowCalendar,
+  passengers,
+  onPassengerChange,
+  time,
+  onTimeChange,
+  slotsOpen,
+  onSlotsToggle
+}) {
+  return (
+    <div className="booking-dates-content">
+      <Field title="When?" help="Select you want to go.">
+        <button type="button" className="booking-value-box"
+          onClick={onShowCalendar}>
+          {formatDate(date)}
+        </button>
+      </Field>
+
+      <Field title="Number of Passengers?" help="Number of people traveling.">
+        <div className="passenger-controls">
+          <button
+            type="button"
+            onClick={() => onPassengerChange(-1)}
+            aria-label="Decrease passengers"
+            disabled={passengers <= 1}
+          >−</button>
+
+          <span>{pad(passengers)}</span>
+
+          <button
+            type="button"
+            onClick={() => onPassengerChange(1)}
+            aria-label="Increase passengers"
+            disabled={passengers >= 20}
+          >+</button>
+        </div>
+      </Field>
+
+      <Field title="Departure Time?" help="Your preferred time.">
+        <select
+          className="booking-value-box booking-time-select"
+          value={time}
+          onChange={(e) => onTimeChange(e.target.value)}
+          aria-label="Departure time"
+        >
+          {TIMES.map((slot) => (
+            <option key={slot} value={slot}>{slot}</option>
+          ))}
+        </select>
+      </Field>
+
+      <button
+        type="button"
+        className="time-slots-toggle"
+        onClick={onSlotsToggle}
+        aria-expanded={slotsOpen}
+      >
+        <span className="time-slots-label">
+          <span className="clock-symbol">◷</span>
+          Available Time Slots
+        </span>
+        <span>{slotsOpen ? '⌃' : '⌄'}</span>
+      </button>
+
+      {slotsOpen && (
+        <div className="time-slot-options">
+          {TIMES.map((slot) => (
+            <button
+              type="button"
+              key={slot}
+              className={slot === time ? 'chosen' : ''}
+              onClick={() => onTimeChange(slot, true)}
+            >
+              {slot}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 7. PACKAGES: package select aur optional camera add-on.
+function PackageOptions({
+  selectedId,
+  onSelect,
+  customizeOpen,
+  onCustomize,
+  addCamera,
+  onCameraChange
+}) {
+  return (
+    <div className="booking-packages">
+      {PACKAGES.map((item) => (
+        <div
+          key={item.id}
+          className={`package-option ${selectedId === item.id ? 'selected' : ''}`}
+        >
+          <button
+            type="button"
+            className="package-option-button"
+            aria-pressed={selectedId === item.id}
+            onClick={() => onSelect(item.id)}
+          >
+            <span className="package-information">
+              <span className="package-title">
+                {item.name}
+                {item.popular && <span className="popular-tag">Popular</span>}
+              </span>
+              <span className="package-description">{item.description}</span>
+            </span>
+            <strong>${item.price}</strong>
+          </button>
+
+          {selectedId === item.id && item.popular && (
+            <>
+              <button
+                type="button"
+                className="package-customize"
+                onClick={onCustomize}
+                aria-expanded={customizeOpen}
+              >
+                <PencilIcon />
+                Customize package
+              </button>
+
+              {customizeOpen && (
+                <label className="package-extra">
+                  <input
+                    type="checkbox"
+                    checked={addCamera}
+                    onChange={(e) => onCameraChange(e.target.checked)}
+                  />
+                  Add underwater camera (+$25)
+                </label>
+              )}
+            </>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// 8. PRICING: package price x passengers + surcharge + extra.
+function Pricing({
+  passengers,
+  selected,
+  surcharge,
+  extra,
+  total,
+  onBook,
+  onQuote
+}) {
+  return (
+    <div className="booking-pricing-content">
+      <div className="cancellation-badge">
+        <CheckIcon />
+        <span>
+          Free cancellation before 9:00 AM on 04/10/2025 local time (EST)
+        </span>
+      </div>
+
+      <div className="pricing-row">
+        <span>{passengers} Adults @ ${selected.price}</span>
+        <strong>${money(passengers * selected.price)}</strong>
+      </div>
+
+      <div className="pricing-row secondary">
+        <span>Operational Surcharge</span>
+        <span>${surcharge}</span>
+      </div>
+
+      {extra > 0 && (
+        <div className="pricing-row secondary">
+          <span>Underwater Camera</span>
+          <span>${extra}</span>
+        </div>
+      )}
+
+      <div className="pricing-row pricing-total">
+        <strong>Options Total</strong>
+        <strong>${money(total)}</strong>
+      </div>
+
+      <p className="payment-note">
+        Your payment will only be charged when the booking request
+        is confirmed by the boat operator.
+      </p>
+
+      <button type="button" className="book-now-btn" onClick={onBook}>
+        BOOK NOW
+      </button>
+
+      <p className="booking-question">
+        <strong>Have Questions?</strong>{' '}
+        Is there any additional information you want to ask us?
+      </p>
+
+      <button type="button" className="quote-btn" onClick={onQuote}>
+        REQUEST A FREE QUOTE
+      </button>
+    </div>
+  );
+}
+
+// 9. POPUP: local demo hai, real payment/booking submit nahi hoti.
+function BookingDialog({
+  type,
+  onClose,
+  date,
+  passengers,
+  time,
+  selected,
+  total
+}) {
+  return (
+    <div className="booking-dialog-backdrop" onClick={onClose}>
+      <div
+        className="booking-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-label={type === 'book' ? 'Booking summary' : 'Quote information'}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button type="button" className="dialog-close"
+          onClick={onClose} aria-label="Close">×</button>
+
+        <h3>
+          {type === 'book' ? 'Booking Summary' : 'Request a Free Quote'}
+        </h3>
+
+        <p>Predator 65 SportFly</p>
+        <p>Date: {formatDate(date)}</p>
+        <p>Passengers: {passengers}</p>
+        <p>Departure: {time}</p>
+        <p>Package: {selected.name}</p>
+        <p>Total: ${money(total)}</p>
+
+        <p className="dialog-note">
+          This is a local demo. No booking or payment has been submitted.
+        </p>
+
+        <button className="dialog-done" type="button" onClick={onClose}>
+          CLOSE
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// 10. MAIN COMPONENT: state aur sections ko connect karta hai.
 function BookingPanel() {
-  const [viewMonth, setViewMonth] = useState(
-    new Date(2021, 4, 1)
-  );
+  // Calendar me kaunsa month dikhana hai.
+  const [viewMonth, setViewMonth] = useState(new Date(2021, 4, 1));
 
-  const [selectedDate, setSelectedDate] = useState(
-    '2021-05-19'
-  );
-
+  // User ki selected date aur uski selection ka status.
+  const [selectedDate, setSelectedDate] = useState('2021-05-19');
   const [dateChanged, setDateChanged] = useState(false);
+
+  // Booking ke details.
   const [passengers, setPassengers] = useState(4);
+  const [departureTime, setDepartureTime] = useState('08:00 AM');
 
-  const [departureTime, setDepartureTime] = useState(
-    '08:00 AM'
-  );
+  // Full-Day package default selected hai.
+  const [selectedPackage, setSelectedPackage] = useState('full');
 
-  const [selectedPackage, setSelectedPackage] = useState(
-    'full'
-  );
-
-  const [timeSlotsOpen, setTimeSlotsOpen] = useState(false);
+  // Time slots aur package customization ki visibility.
+  const [slotsOpen, setSlotsOpen] = useState(false);
   const [customizeOpen, setCustomizeOpen] = useState(false);
   const [addCamera, setAddCamera] = useState(false);
+
+  // 'book', 'quote' ya '' (popup band).
   const [dialog, setDialog] = useState('');
 
-  const [openSections, setOpenSections] = useState({
+  // Chaar accordion sections ki open/close state.
+  const [open, setOpen] = useState({
     availability: true,
     dates: true,
     packages: true,
     pricing: true
   });
 
-  const year = viewMonth.getFullYear();
-  const month = viewMonth.getMonth();
-
-  const calendarDays = getCalendarDays(year, month);
-
-  const selected = PACKAGES.find(
-    (item) => item.id === selectedPackage
-  );
-
+  // Selected package nikaalkar total automatically calculate hota hai.
+  const selected = PACKAGES.find((item) => item.id === selectedPackage);
   const surcharge = 65;
+  const extra = addCamera && selectedPackage === 'full' ? 25 : 0;
+  const total = passengers * selected.price + surcharge + extra;
 
-  const extraPrice =
-    addCamera && selectedPackage === 'full' ? 25 : 0;
+  // Heading click par section toggle.
+  const toggle = (section) => {
+    setOpen((prev) => ({ ...prev, [section]: !prev[section] }));
+  };
 
-  const subtotal = passengers * selected.price;
-
-  const total = subtotal + surcharge + extraPrice;
-
-  function changeMonth(direction) {
-    setViewMonth(
-      (previous) =>
-        new Date(
-          previous.getFullYear(),
-          previous.getMonth() + direction,
-          1
-        )
+  // Previous/next month show karo.
+  const changeMonth = (step) => {
+    setViewMonth((prev) =>
+      new Date(prev.getFullYear(), prev.getMonth() + step, 1)
     );
-  }
+  };
 
-  function chooseDate(day) {
-    setSelectedDate(
-      `${year}-${pad(month + 1)}-${pad(day)}`
-    );
-
+  // Calendar se date select karo.
+  const chooseDate = (day) => {
+    const year = viewMonth.getFullYear();
+    const month = pad(viewMonth.getMonth() + 1);
+    setSelectedDate(`${year}-${month}-${pad(day)}`);
     setDateChanged(true);
-  }
+  };
 
-  function toggleSection(section) {
-    setOpenSections((previous) => ({
-      ...previous,
-      [section]: !previous[section]
-    }));
-  }
+  // Passengers ko 1 se 20 ke beech rakho.
+  const changePassengers = (step) => {
+    setPassengers((prev) => Math.min(20, Math.max(1, prev + step)));
+  };
 
-  function updatePassengers(amount) {
-    setPassengers((previous) =>
-      Math.min(20, Math.max(1, previous + amount))
-    );
-  }
+  // Time choose karne par optionally time slots close karo.
+  const changeTime = (time, closeSlots = false) => {
+    setDepartureTime(time);
+    if (closeSlots) setSlotsOpen(false);
+  };
 
-  function selectPackage(id) {
+  // Package change par customization reset hoti hai.
+  const choosePackage = (id) => {
     setSelectedPackage(id);
     setCustomizeOpen(false);
-
-    if (id !== 'full') {
-      setAddCamera(false);
-    }
-  }
-
-  function sectionHeader(title, section) {
-    return (
-      <button
-        type="button"
-        className="booking-heading"
-        onClick={() => toggleSection(section)}
-        aria-expanded={openSections[section]}
-      >
-        <span>{title}</span>
-
-        <span className="section-toggle">
-          {openSections[section] ? '−' : '+'}
-        </span>
-      </button>
-    );
-  }
+    if (id !== 'full') setAddCamera(false);
+  };
 
   return (
     <aside className="booking-panel">
-
-      {/* PRICE */}
-
+      {/* Base price */}
       <div className="booking-price">
         <h3>Prices From</h3>
-
         <div className="booking-price-line">
-          <svg
-            viewBox="0 0 24 24"
-            width="32"
-            height="32"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.3"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
+          <svg viewBox="0 0 24 24" width="32" height="32"
+            fill="none" stroke="currentColor" strokeWidth="2.3"
+            strokeLinejoin="round" aria-hidden="true">
             <path d="M3 3h9l9 9-9 9-9-9V3Z" />
           </svg>
-
-          <strong>$280</strong>
+          <strong>$230</strong>
           <span>per person</span>
         </div>
       </div>
 
-      {/* CHECK AVAILABILITY */}
-
-      <section className="booking-section">
-        {sectionHeader(
-          'Check Availability',
-          'availability'
-        )}
-
-        {openSections.availability && (
-          <div className="calendar-content">
-
-            <div className="calendar-toolbar">
-              <strong>
-                {MONTHS[month]} {year}
-              </strong>
-
-              <div className="calendar-navigation">
-                <button
-                  type="button"
-                  onClick={() => changeMonth(-1)}
-                  aria-label="Previous month"
-                >
-                  ◀
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => changeMonth(1)}
-                  aria-label="Next month"
-                >
-                  ▶
-                </button>
-              </div>
-            </div>
-
-            <div className="calendar-weekdays">
-              {WEEKDAYS.map((day) => (
-                <span key={day}>{day}</span>
-              ))}
-            </div>
-
-            <div className="calendar-grid">
-              {calendarDays.map((cell) => {
-                const price = cell.current
-                  ? getPrice(year, month, cell.day)
-                  : null;
-
-                const available = Boolean(price);
-
-                const cellDate =
-                  `${year}-${pad(month + 1)}-${pad(cell.day)}`;
-
-                const active =
-                  dateChanged &&
-                  selectedDate === cellDate;
-
-                return (
-                  <button
-                    key={cell.key}
-                    type="button"
-                    disabled={!available}
-                    onClick={() => chooseDate(cell.day)}
-                    className={[
-                      'calendar-day',
-                      !cell.current ? 'outside' : '',
-                      available
-                        ? 'available'
-                        : 'unavailable',
-                      active ? 'active' : ''
-                    ].join(' ')}
-                    aria-label={
-                      available
-                        ? `${cell.day} ${MONTHS[month]}, €${price}`
-                        : `${cell.day} unavailable`
-                    }
-                  >
-                    <span className="calendar-day-number">
-                      {pad(cell.day)}
-                    </span>
-
-                    {available && (
-                      <small>
-                        €{price.toLocaleString('en-US')}
-                      </small>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-
-            <p className="calendar-note">
-              Green dates are available.
-              Prices vary by date.
-            </p>
-          </div>
-        )}
-      </section>
-
-      {/* SELECT DATES AND DURATION */}
-
-      <section className="booking-section">
-        {sectionHeader(
-          'Select Dates & Duration',
-          'dates'
-        )}
-
-        {openSections.dates && (
-          <div className="booking-dates-content">
-
-            {/* DATE */}
-
-            <div className="booking-field-row">
-              <div>
-                <h4>When?</h4>
-                <p>Select you want to go.</p>
-              </div>
-
-              <button
-                type="button"
-                className="booking-value-box"
-                onClick={() =>
-                  setOpenSections((previous) => ({
-                    ...previous,
-                    availability: true
-                  }))
-                }
-              >
-                {formatDate(selectedDate)}
-              </button>
-            </div>
-
-            {/* PASSENGERS */}
-
-            <div className="booking-field-row">
-              <div>
-                <h4>Number of Passengers?</h4>
-                <p>Number of people traveling.</p>
-              </div>
-
-              <div className="passenger-controls">
-                <button
-                  type="button"
-                  onClick={() =>
-                    updatePassengers(-1)
-                  }
-                  aria-label="Decrease passengers"
-                  disabled={passengers <= 1}
-                >
-                  −
-                </button>
-
-                <span>{pad(passengers)}</span>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    updatePassengers(1)
-                  }
-                  aria-label="Increase passengers"
-                  disabled={passengers >= 20}
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            {/* DEPARTURE TIME */}
-
-            <div className="booking-field-row">
-              <div>
-                <h4>Departure Time?</h4>
-                <p>Your preferred time.</p>
-              </div>
-
-              <select
-                className="booking-value-box booking-time-select"
-                value={departureTime}
-                onChange={(event) =>
-                  setDepartureTime(event.target.value)
-                }
-                aria-label="Departure time"
-              >
-                {TIME_SLOTS.map((time) => (
-                  <option key={time} value={time}>
-                    {time}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* AVAILABLE TIME SLOTS */}
-
-            <button
-              type="button"
-              className="time-slots-toggle"
-              onClick={() =>
-                setTimeSlotsOpen(!timeSlotsOpen)
-              }
-              aria-expanded={timeSlotsOpen}
-            >
-              <span className="time-slots-label">
-                <span className="clock-symbol">
-                  ◷
-                </span>
-
-                Available Time Slots
-              </span>
-
-              <span>
-                {timeSlotsOpen ? '⌃' : '⌄'}
-              </span>
-            </button>
-
-            {timeSlotsOpen && (
-              <div className="time-slot-options">
-                {TIME_SLOTS.map((time) => (
-                  <button
-                    type="button"
-                    key={time}
-                    className={
-                      time === departureTime
-                        ? 'chosen'
-                        : ''
-                    }
-                    onClick={() => {
-                      setDepartureTime(time);
-                      setTimeSlotsOpen(false);
-                    }}
-                  >
-                    {time}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </section>
-
-      {/* PACKAGES */}
-
-      <section className="booking-section">
-        {sectionHeader('Packages', 'packages')}
-
-        {openSections.packages && (
-          <div className="booking-packages">
-
-            {PACKAGES.map((item) => (
-              <div
-                className={`package-option ${
-                  selectedPackage === item.id
-                    ? 'selected'
-                    : ''
-                }`}
-                key={item.id}
-              >
-                <button
-                  type="button"
-                  className="package-option-button"
-                  aria-pressed={
-                    selectedPackage === item.id
-                  }
-                  onClick={() =>
-                    selectPackage(item.id)
-                  }
-                >
-                  <span className="package-information">
-                    <span className="package-title">
-                      {item.name}
-
-                      {item.popular && (
-                        <span className="popular-tag">
-                          Popular
-                        </span>
-                      )}
-                    </span>
-
-                    <span className="package-description">
-                      {item.description}
-                    </span>
-                  </span>
-
-                  <strong>${item.price}</strong>
-                </button>
-
-                {/* CUSTOMIZE PACKAGE */}
-
-                {selectedPackage === item.id &&
-                  item.popular && (
-                    <>
-                      <button
-                        type="button"
-                        className="package-customize"
-                        onClick={() =>
-                          setCustomizeOpen(!customizeOpen)
-                        }
-                        aria-expanded={customizeOpen}
-                      >
-                        <PencilIcon />
-                        Customize package
-                      </button>
-
-                      {customizeOpen && (
-                        <label className="package-extra">
-                          <input
-                            type="checkbox"
-                            checked={addCamera}
-                            onChange={(event) =>
-                              setAddCamera(
-                                event.target.checked
-                              )
-                            }
-                          />
-
-                          Add underwater camera (+$25)
-                        </label>
-                      )}
-                    </>
-                  )}
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* PRICING DETAILS */}
-
-      <section className="booking-section">
-        {sectionHeader(
-          'Pricing Details',
-          'pricing'
-        )}
-
-        {openSections.pricing && (
-          <div className="booking-pricing-content">
-
-            {/* CANCELLATION BADGE */}
-
-            <div className="cancellation-badge">
-              <CheckCircleIcon />
-
-              <span>
-                Free cancellation before 9:00 AM on
-                {' '}04/10/2025 local time (EST)
-              </span>
-            </div>
-
-            {/* ADULTS PRICE */}
-
-            <div className="pricing-row">
-              <span>
-                {passengers} Adults @ ${selected.price}
-              </span>
-
-              <strong>
-                ${subtotal.toLocaleString('en-US')}
-              </strong>
-            </div>
-
-            {/* SURCHARGE */}
-
-            <div className="pricing-row secondary">
-              <span>Operational Surcharge</span>
-              <span>${surcharge}</span>
-            </div>
-
-            {/* EXTRA PRICE */}
-
-            {extraPrice > 0 && (
-              <div className="pricing-row secondary">
-                <span>Underwater Camera</span>
-                <span>${extraPrice}</span>
-              </div>
-            )}
-
-            {/* TOTAL */}
-
-            <div className="pricing-row pricing-total">
-              <strong>Options Total</strong>
-
-              <strong>
-                ${total.toLocaleString('en-US')}
-              </strong>
-            </div>
-
-            {/* PAYMENT NOTE */}
-
-            <p className="payment-note">
-              Your payment will only be charged when
-              the booking request is confirmed by the
-              boat operator.
-            </p>
-
-            {/* BOOK NOW */}
-
-            <button
-              type="button"
-              className="book-now-btn"
-              onClick={() => setDialog('book')}
-            >
-              BOOK NOW
-            </button>
-
-            {/* HAVE QUESTIONS */}
-
-            <p className="booking-question">
-              <strong>Have Questions?</strong>
-              {' '}Is there any additional information
-              you want to ask us?
-            </p>
-
-            {/* REQUEST QUOTE */}
-
-            <button
-              type="button"
-              className="quote-btn"
-              onClick={() => setDialog('quote')}
-            >
-              REQUEST A FREE QUOTE
-            </button>
-          </div>
-        )}
-      </section>
-
-      {/* LOCAL DEMO DIALOG */}
-
+      {/* Section 1: Availability Calendar */}
+      <Accordion title="Check Availability" open={open.availability}
+        onToggle={() => toggle('availability')}>
+        <Calendar
+          viewMonth={viewMonth}
+          selectedDate={selectedDate}
+          dateChanged={dateChanged}
+          onMonthChange={changeMonth}
+          onDateChange={chooseDate}
+        />
+      </Accordion>
+
+      {/* Section 2: Date, Passengers & Time */}
+      <Accordion title="Select Dates & Duration" open={open.dates}
+        onToggle={() => toggle('dates')}>
+        <TripDetails
+          date={selectedDate}
+          onShowCalendar={() =>
+            setOpen((prev) => ({ ...prev, availability: true }))
+          }
+          passengers={passengers}
+          onPassengerChange={changePassengers}
+          time={departureTime}
+          onTimeChange={changeTime}
+          slotsOpen={slotsOpen}
+          onSlotsToggle={() => setSlotsOpen((prev) => !prev)}
+        />
+      </Accordion>
+
+      {/* Section 3: Packages */}
+      <Accordion title="Packages" open={open.packages}
+        onToggle={() => toggle('packages')}>
+        <PackageOptions
+          selectedId={selectedPackage}
+          onSelect={choosePackage}
+          customizeOpen={customizeOpen}
+          onCustomize={() => setCustomizeOpen((prev) => !prev)}
+          addCamera={addCamera}
+          onCameraChange={setAddCamera}
+        />
+      </Accordion>
+
+      {/* Section 4: Pricing Details */}
+      <Accordion title="Pricing Details" open={open.pricing}
+        onToggle={() => toggle('pricing')}>
+        <Pricing
+          passengers={passengers}
+          selected={selected}
+          surcharge={surcharge}
+          extra={extra}
+          total={total}
+          onBook={() => setDialog('book')}
+          onQuote={() => setDialog('quote')}
+        />
+      </Accordion>
+
+      {/* Book Now / Request Quote popup */}
       {dialog && (
-        <div
-          className="booking-dialog-backdrop"
-          onClick={() => setDialog('')}
-        >
-          <div
-            className="booking-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-label={
-              dialog === 'book'
-                ? 'Booking summary'
-                : 'Quote information'
-            }
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
-            <button
-              type="button"
-              className="dialog-close"
-              onClick={() => setDialog('')}
-              aria-label="Close"
-            >
-              ×
-            </button>
-
-            <h3>
-              {dialog === 'book'
-                ? 'Booking Summary'
-                : 'Request a Free Quote'}
-            </h3>
-
-            <p>Predator 65 SportFly</p>
-
-            <p>
-              Date: {formatDate(selectedDate)}
-            </p>
-
-            <p>Passengers: {passengers}</p>
-
-            <p>Departure: {departureTime}</p>
-
-            <p>Package: {selected.name}</p>
-
-            <p>
-              Total: ${total.toLocaleString('en-US')}
-            </p>
-
-            <p className="dialog-note">
-              This is a local demo. No booking or
-              payment has been submitted.
-            </p>
-
-            <button
-              className="dialog-done"
-              type="button"
-              onClick={() => setDialog('')}
-            >
-              CLOSE
-            </button>
-          </div>
-        </div>
+        <BookingDialog
+          type={dialog}
+          onClose={() => setDialog('')}
+          date={selectedDate}
+          passengers={passengers}
+          time={departureTime}
+          selected={selected}
+          total={total}
+        />
       )}
-
     </aside>
   );
 }

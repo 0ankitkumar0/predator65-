@@ -1,6 +1,15 @@
 
 import './App.css';
 
+// Component CSS
+import './components/Navbar.css';
+import './components/Hero.css';
+import './components/YachtGallery.css';
+import './components/AboutCharter.css';
+import './components/TargetSpecies.css';
+import './components/BookingPanel.css';
+
+// Components
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import YachtGallery from './components/YachtGallery';
@@ -18,7 +27,6 @@ function App() {
     <>
       <div className="hero-wrapper">
         <div className="hero-overlay"></div>
-
         <Navbar />
         <Hero />
       </div>

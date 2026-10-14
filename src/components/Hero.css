@@ -1,0 +1,74 @@
+/* Styles for Hero component. */
+
+.hero {
+  position: relative;
+  z-index: 1;
+  padding: 65px 4.3% 20px;
+  color: #ffffff;
+}
+
+.hero-content {
+  max-width: 1100px;
+}
+
+.hero-content h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 43px;
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.hero-rating {
+  color: #ff7900;
+  font-size: 17px;
+  letter-spacing: 1px;
+  margin-bottom: 13px;
+}
+
+.hero-content p {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0.1px;
+  max-width: 1050px;
+  color: #ffffff;
+}
+
+@media (max-width: 992px) {
+  .hero {
+    padding: 55px 4% 20px;
+  }
+
+  .hero-content h1 {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 30px 5% 55px;
+  }
+
+  .hero-content h1 {
+    font-size: 28px;
+  }
+
+  .hero-rating {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .hero-content p {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 25px;
+  }
+}
