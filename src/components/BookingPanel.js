@@ -81,7 +81,7 @@ function calendarDays(year, month) {
   });
 }
 
-// Available date ka demo price.
+// Available date demo price.
 function dayPrice(year, month, day) {
   if (year === 2021 && month === 4) {
     return MAY_PRICES[day] || null;
@@ -92,7 +92,7 @@ function dayPrice(year, month, day) {
     : null;
 }
 
-// 3. ICONS: existing design ke same SVG icons.
+// 3. ICONS: existing design same SVG icons.
 function PencilIcon() {
   return (
     <svg
@@ -455,50 +455,6 @@ function Pricing({
   );
 }
 
-// 9. POPUP: local demo hai, real payment/booking submit nahi hoti.
-function BookingDialog({
-  type,
-  onClose,
-  date,
-  passengers,
-  time,
-  selected,
-  total
-}) {
-  return (
-    <div className="booking-dialog-backdrop" onClick={onClose}>
-      <div
-        className="booking-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-label={type === 'book' ? 'Booking summary' : 'Quote information'}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button type="button" className="dialog-close"
-          onClick={onClose} aria-label="Close">×</button>
-
-        <h3>
-          {type === 'book' ? 'Booking Summary' : 'Request a Free Quote'}
-        </h3>
-
-        <p>Predator 65 SportFly</p>
-        <p>Date: {formatDate(date)}</p>
-        <p>Passengers: {passengers}</p>
-        <p>Departure: {time}</p>
-        <p>Package: {selected.name}</p>
-        <p>Total: ${money(total)}</p>
-
-        <p className="dialog-note">
-          This is a local demo. No booking or payment has been submitted.
-        </p>
-
-        <button className="dialog-done" type="button" onClick={onClose}>
-          CLOSE
-        </button>
-      </div>
-    </div>
-  );
-}
 
 // 10. MAIN COMPONENT: state aur sections ko connect karta hai.
 function BookingPanel() {
@@ -522,7 +478,6 @@ function BookingPanel() {
   const [addCamera, setAddCamera] = useState(false);
 
   // 'book', 'quote' ya '' (popup band).
-  const [dialog, setDialog] = useState('');
 
   // Chaar accordion sections ki open/close state.
   const [open, setOpen] = useState({
@@ -643,23 +598,8 @@ function BookingPanel() {
           surcharge={surcharge}
           extra={extra}
           total={total}
-          onBook={() => setDialog('book')}
-          onQuote={() => setDialog('quote')}
         />
-      </Accordion>
-
-      {/* Book Now / Request Quote popup */}
-      {dialog && (
-        <BookingDialog
-          type={dialog}
-          onClose={() => setDialog('')}
-          date={selectedDate}
-          passengers={passengers}
-          time={departureTime}
-          selected={selected}
-          total={total}
-        />
-      )}
+      </Accordion>  
     </aside>
   );
 }

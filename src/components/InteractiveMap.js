@@ -54,8 +54,6 @@ function InteractiveMap() {
     L.tileLayer(
       'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19,
         crossOrigin: true
       }
@@ -63,14 +61,14 @@ function InteractiveMap() {
 
     // Keep map responsive
     const resizeObserver = new ResizeObserver(() => {
-      map.invalidateSize();
+      map.invalidateSize();    //leaflet map container size recheck
     });
 
     resizeObserver.observe(container);
 
     // Fix initial map rendering
     map.whenReady(() => {
-      map.invalidateSize();
+      map.invalidateSize();  
     });
 
     return () => {

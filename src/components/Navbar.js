@@ -2,8 +2,7 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="nav-logo">
-        <span className="logo-icon">◢</span>
-        <span>Boating Beans</span>
+        <img src="/images/logo-light.png" alt="Boating Beans Logo" className="navbar-logo-img" />
       </div>
 
       <div className="nav-links">

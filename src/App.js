@@ -1,4 +1,4 @@
-
+//Global CSS
 import './App.css';
 
 // Component CSS
