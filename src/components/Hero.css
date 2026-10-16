@@ -1,15 +1,75 @@
-/* Styles for Hero component. */
+/* =========================================
+   HERO SECTION
+========================================= */
 
 .hero {
   position: relative;
   z-index: 1;
-  padding: 65px 4.3% 20px;
+  padding: 20px 4.3% 100px;
   color: #ffffff;
+  box-sizing: border-box;
 }
+
+/* =========================================
+   HERO CONTENT
+========================================= */
 
 .hero-content {
   max-width: 1100px;
+  position: relative;
+  z-index: 2;
 }
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.hero-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+
+  /* Reduced gap to move heading upward */
+  margin: 0 0 18px 0;
+  padding: 0;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+
+  color: #9ca3af;
+  cursor: pointer;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.hero-back-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.hero-back-btn:focus-visible {
+  outline: 2px solid #ff7900;
+  outline-offset: 3px;
+}
+
+.hero-back-btn svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* =========================================
+   HERO TITLE
+========================================= */
 
 .hero-content h1 {
   font-family: Georgia, "Times New Roman", serif;
@@ -17,9 +77,14 @@
   font-weight: 400;
   line-height: 1.18;
   letter-spacing: -0.5px;
-  margin-bottom: 10px;
+
+  margin: 0 0 10px;
   color: #ffffff;
 }
+
+/* =========================================
+   HERO RATING
+========================================= */
 
 .hero-rating {
   color: #ff7900;
@@ -28,28 +93,55 @@
   margin-bottom: 13px;
 }
 
+/* =========================================
+   HERO DESCRIPTION
+========================================= */
+
 .hero-content p {
   font-size: 12px;
   font-weight: 400;
   line-height: 1.65;
   letter-spacing: 0.1px;
+
   max-width: 1050px;
+  margin: 0;
+
   color: #ffffff;
 }
 
+/* =========================================
+   TABLET
+========================================= */
+
 @media (max-width: 992px) {
   .hero {
-    padding: 55px 4% 20px;
+    padding: 18px 4% 90px;
   }
 
   .hero-content h1 {
     font-size: 36px;
   }
+
+  .hero-back-btn {
+    width: 46px;
+    height: 46px;
+    margin-bottom: 18px;
+  }
 }
+
+/* =========================================
+   MOBILE
+========================================= */
 
 @media (max-width: 768px) {
   .hero {
-    padding: 30px 5% 55px;
+    padding: 20px 5% 85px;
+  }
+
+  .hero-back-btn {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 20px;
   }
 
   .hero-content h1 {
@@ -67,8 +159,22 @@
   }
 }
 
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
 @media (max-width: 480px) {
+  .hero {
+    padding-bottom: 90px;
+  }
+
   .hero-content h1 {
     font-size: 25px;
+  }
+
+  .hero-back-btn {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 18px;
   }
 }
