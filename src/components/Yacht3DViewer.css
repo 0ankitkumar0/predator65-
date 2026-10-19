@@ -1,5 +1,6 @@
-
-/* 3D YACHT VIEWER */
+/* =========================================
+   3D YACHT VIEWER
+========================================= */
 
 .yacht-3d-section {
   width: 100%;
@@ -17,7 +18,9 @@
   border-radius: 10px;
 }
 
-/* THREE.JS CANVAS */
+/* =========================================
+   THREE.JS CANVAS
+========================================= */
 
 .yacht-3d-container canvas {
   display: block;
@@ -31,7 +34,69 @@
   cursor: grabbing;
 }
 
-/* LOADING */
+/* =========================================
+   MANUAL ROTATE AND ZOOM CONTROLS
+========================================= */
+
+.yacht-3d-controls {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.yacht-3d-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+  padding: 0;
+
+  background: #ffffff;
+  color: #202124;
+
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+
+  font-family: Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+
+  cursor: pointer;
+  touch-action: manipulation;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.yacht-3d-controls button:hover {
+  background: #ff7900;
+  color: #ffffff;
+  border-color: #ff7900;
+}
+
+.yacht-3d-controls button:active {
+  transform: scale(0.96);
+}
+
+.yacht-3d-controls button:focus-visible {
+  outline: 2px solid #ff7900;
+  outline-offset: 2px;
+}
+
+/* =========================================
+   LOADING
+========================================= */
 
 .yacht-3d-message {
   position: absolute;
@@ -67,7 +132,9 @@
   }
 }
 
-/* ERROR */
+/* =========================================
+   ERROR
+========================================= */
 
 .yacht-3d-error {
   color: #c0392b;
@@ -75,7 +142,9 @@
   line-height: 1.6;
 }
 
-/* TABLET */
+/* =========================================
+   TABLET
+========================================= */
 
 @media (max-width: 992px) {
   .yacht-3d-container {
@@ -83,7 +152,9 @@
   }
 }
 
-/* MOBILE */
+/* =========================================
+   MOBILE
+========================================= */
 
 @media (max-width: 768px) {
   .yacht-3d-section {
@@ -94,12 +165,38 @@
     height: 280px;
     border-radius: 8px;
   }
+
+  .yacht-3d-controls {
+    bottom: 12px;
+    right: 12px;
+    gap: 6px;
+  }
+
+  .yacht-3d-controls button {
+    width: 36px;
+    height: 36px;
+    font-size: 21px;
+  }
 }
 
-/* SMALL MOBILE */
+/* =========================================
+   SMALL MOBILE
+========================================= */
 
 @media (max-width: 480px) {
   .yacht-3d-container {
     height: 240px;
+  }
+
+  .yacht-3d-controls {
+    bottom: 10px;
+    right: 10px;
+    gap: 6px;
+  }
+
+  .yacht-3d-controls button {
+    width: 34px;
+    height: 34px;
+    font-size: 20px;
   }
 }

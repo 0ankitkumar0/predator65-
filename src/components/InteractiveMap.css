@@ -1,4 +1,3 @@
-
 /* =========================
    MEETING POINT & PICKUP
 ========================= */
@@ -47,6 +46,15 @@
    INTERACTIVE MAP
 ========================= */
 
+/* Wrapper for map and buttons */
+
+.interactive-map-viewer {
+  position: relative;
+  width: 100%;
+}
+
+/* Existing map container */
+
 .interactive-map-container {
   position: relative;
   z-index: 1;
@@ -79,7 +87,169 @@
   color: #667085;
 }
 
-/* HOTEL PICKUP NOTE */
+/* =========================
+   MANUAL MAP CONTROLS
+========================= */
+
+.interactive-map-controls {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.interactive-map-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+  padding: 0;
+
+  background: #ffffff;
+  color: #202124;
+
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+
+  font-family: Arial, sans-serif;
+  font-size: 23px;
+  font-weight: 500;
+
+  cursor: pointer;
+  touch-action: manipulation;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.interactive-map-controls button:hover {
+  background: #ff7900;
+  color: #ffffff;
+  border-color: #ff7900;
+}
+
+.interactive-map-controls button:active {
+  transform: scale(0.96);
+}
+
+.interactive-map-controls button:focus-visible {
+  outline: 2px solid #ff7900;
+  outline-offset: 2px;
+}
+
+.interactive-map-controls button svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* =========================
+   FULLSCREEN MAP POPUP
+========================= */
+
+.interactive-map-viewer.is-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+  background: #ffffff;
+}
+
+/* Fullscreen header */
+
+.interactive-map-fullscreen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 60px;
+  min-height: 60px;
+  padding: 0 22px;
+
+  background: #ffffff;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.interactive-map-fullscreen-header h3 {
+  margin: 0;
+
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: #202124;
+}
+
+/* Fullscreen close button */
+
+.interactive-map-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+  padding: 0;
+
+  background: #ffffff;
+  color: #202124;
+
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+
+  font-size: 28px;
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.interactive-map-close:hover {
+  background: #ff7900;
+  color: #ffffff;
+}
+
+.interactive-map-close:focus-visible {
+  outline: 2px solid #ff7900;
+  outline-offset: 2px;
+}
+
+/* Expand existing map to fill available space */
+
+.interactive-map-viewer.is-fullscreen .interactive-map-container {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+  border-radius: 0;
+}
+
+/* Move zoom buttons below fullscreen header */
+
+.interactive-map-viewer.is-fullscreen .interactive-map-controls {
+  top: 75px;
+  right: 15px;
+}
+
+/* =========================
+   HOTEL PICKUP NOTE
+========================= */
 
 .interactive-map-note {
   margin: 15px 0 0;
@@ -122,6 +292,38 @@
     height: 320px;
     border-radius: 8px;
   }
+
+  .interactive-map-controls {
+    top: 12px;
+    right: 12px;
+    gap: 6px;
+  }
+
+  .interactive-map-controls button {
+    width: 36px;
+    height: 36px;
+    font-size: 21px;
+  }
+
+  .interactive-map-fullscreen-header {
+    height: 55px;
+    min-height: 55px;
+    padding: 0 15px;
+  }
+
+  .interactive-map-fullscreen-header h3 {
+    font-size: 19px;
+  }
+
+  .interactive-map-close {
+    width: 36px;
+    height: 36px;
+  }
+
+  .interactive-map-viewer.is-fullscreen .interactive-map-controls {
+    top: 67px;
+    right: 12px;
+  }
 }
 
 /* =========================
@@ -149,5 +351,15 @@
 
   .interactive-map-note {
     font-size: 12px;
+  }
+
+  .interactive-map-controls button {
+    width: 34px;
+    height: 34px;
+    font-size: 20px;
+  }
+
+  .interactive-map-fullscreen-header h3 {
+    font-size: 17px;
   }
 }
